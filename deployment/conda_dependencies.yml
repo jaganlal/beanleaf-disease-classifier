@@ -1,0 +1,32 @@
+name: iris_scoring
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  # The python interpreter version.
+  # Currently Azure ML Workbench only supports 3.5.2 and later.
+  - python=3.8
+  - pip
+  - numpy
+  - pandas
+  - pytest
+  - pip:
+      - azureml-sdk
+      - azureml-defaults
+      #- azureml-sdk==1.17.0
+      - azureml-monitoring
+      - black
+      - cached-property
+      - jsonlines
+      - nteract-scrapbook
+      - pydocumentdb
+      - tqdm
+      - pyemd
+      - ipywebrtc
+      - pre-commit
+      - scikit-learn
+      - requests
+      - requests-oauthlib
+      - regex
+      - seaborn
+      - joblib

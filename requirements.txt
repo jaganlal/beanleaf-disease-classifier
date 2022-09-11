@@ -1,0 +1,12 @@
+tensorflow
+numpy
+requests
+matplotlib
+tensorflow_hub
+scikit-image
+azureml-core
+azureml-dataprep
+ipython
+ipykernel
+joblib
+#Run this file with - pip3 install -r requirements.txt

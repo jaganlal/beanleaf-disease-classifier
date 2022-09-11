@@ -1,0 +1,7 @@
+computeType: aci
+containerResourceRequirements:
+  cpu: 1
+  memoryInGB: 1
+authEnabled: false
+sslEnabled: false
+appInsightsEnabled: true
