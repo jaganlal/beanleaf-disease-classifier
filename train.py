@@ -28,8 +28,6 @@ class BeanleafDiseaseClassifier():
         img_width = 224
 
         print('Input dataset:', self.run.input_datasets)
-        input_ds = self.run.input_datasets['beanleaf_dataset']
-        print('Input DS:', input_ds)
 
         datastore = self.workspace.get_default_datastore()
         dataset = Dataset.File.from_files(datastore.path('beanleaf_dataset')).as_named_input('input')
