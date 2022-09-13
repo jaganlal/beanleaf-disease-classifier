@@ -1,5 +1,6 @@
 env
-beans
+beanleaf_dataset
+models
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
