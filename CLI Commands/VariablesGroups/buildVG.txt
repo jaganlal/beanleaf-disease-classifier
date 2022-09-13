@@ -6,3 +6,4 @@ ml.computeVMSize = STANDARD_D4A_V4
 ml.region = centralus
 ml.resourceGroup = RG_Jaganlal
 ml.workspace = beanleaf_classifier
+ml.experimentName = beanleaf_classifier_experiment

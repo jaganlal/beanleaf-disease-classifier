@@ -27,6 +27,15 @@ class BeanleafDiseaseClassifier():
         img_height = 224
         img_width = 224
 
+        print('Input dataset:', self.run.input_datasets)
+        input_ds = self.run.input_datasets['beanleaf_dataset']
+        print('Input DS:', input_ds)
+
+        datastore = self.workspace.get_default_datastore()
+        dataset = Dataset.File.from_files(datastore.path('beanleaf_dataset')).as_named_input('input')
+        print('Dataset:', dataset)
+        print('Path on compute:', dataset.path_on_compute)
+
         # DATA needs to be ready here
         beanleaf_dataset_train_path = os.path.join(self.args.container_name, 'train')
         beanleaf_dataset_test_path = os.path.join(self.args.container_name, 'test')
