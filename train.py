@@ -1,4 +1,5 @@
 import os
+from os.path import exists
 
 from azureml.core import Datastore, Dataset
 from azureml.core.run import Run
@@ -33,7 +34,10 @@ class BeanleafDiseaseClassifier():
         train_data_ds = Dataset.File.from_files(path=datastore_paths)
         print('Train dataset tp path 1:', train_data_ds.to_path())
 
-        train_data_ds.mount('./')
+        # mounted_path = "/tmp"
+        # mount_context = train_data_ds.mount(mounted_path)
+        # mount_context.start()
+        # print(os.listdir(mounted_path))
 
         print('Input dataset:', self.run.input_datasets)
 
@@ -41,6 +45,26 @@ class BeanleafDiseaseClassifier():
         dataset = Dataset.File.from_files(datastore.path('beanleaf_dataset')).as_named_input('input')
         print('Dataset:', dataset)
         print('Path on compute:', dataset.path_on_compute)
+
+        path_to_file = os.path.join(self.args.container_name, 'train/healthy/healthy_train.0.jpg')
+        print("Path to file:", path_to_file)
+        file_exists = exists(path_to_file)
+        print("File healthy_train.0.jpg - ", file_exists)
+
+        mounted_path = "/"
+        mount_context = train_data_ds.mount(mounted_path)
+        mount_context.start()
+        print('mounted_path:', os.listdir(mounted_path))
+
+        path_to_file1 = os.path.join(self.args.container_name, 'train/healthy/healthy_train.0.jpg')
+        print("Path to file 1:", path_to_file1)
+        file_exists1 = exists(path_to_file1)
+        print("File healthy_train.0.jpg 1 - ", file_exists1)
+
+        path_to_file2 = os.path.join('/', 'train/healthy/healthy_train.0.jpg')
+        print("Path to file 2:", path_to_file2)
+        file_exists2 = exists(path_to_file2)
+        print("File healthy_train.0.jpg 2 - ", file_exists2)
 
         # DATA needs to be ready here
         beanleaf_dataset_train_path = os.path.join(self.args.container_name, 'train')
