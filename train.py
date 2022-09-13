@@ -27,6 +27,18 @@ class BeanleafDiseaseClassifier():
         img_height = 224
         img_width = 224
 
+        datastore_paths = [(self.datastore, os.path.join(self.args.container_name, 'train'))]
+        # data_ds = Dataset.Tabular.from_delimited_files(path=datastore_paths)
+        train_data_ds = Dataset.File.from_files(path=datastore_paths)
+        dataset_name = self.args.dataset_name     
+        if dataset_name not in self.workspace.datasets:
+            train_data_ds = train_data_ds.register(workspace=self.workspace,
+                        name=dataset_name,
+                        description=self.args.dataset_desc,
+                        create_new_version=True)
+
+        print('Train dataset:', train_data_ds)
+        print('Train dataset tp path:', train_data_ds.to_path())
         print('Input dataset:', self.run.input_datasets)
 
         datastore = self.workspace.get_default_datastore()
