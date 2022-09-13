@@ -31,6 +31,7 @@ class BeanleafDiseaseClassifier():
         datastore_paths = [(self.datastore, os.path.join(self.args.container_name, 'train'))]
         # data_ds = Dataset.Tabular.from_delimited_files(path=datastore_paths)
         train_data_ds = Dataset.File.from_files(path=datastore_paths)
+        print('Train dataset tp path 1:', train_data_ds.to_path())
         dataset_name = self.args.dataset_name     
         if dataset_name not in self.workspace.datasets:
             train_data_ds = train_data_ds.register(workspace=self.workspace,
@@ -39,7 +40,7 @@ class BeanleafDiseaseClassifier():
                         create_new_version=True)
 
         print('Train dataset:', train_data_ds)
-        print('Train dataset tp path:', train_data_ds.to_path())
+        print('Train dataset tp path 2:', train_data_ds.to_path())
         print('Input dataset:', self.run.input_datasets)
 
         datastore = self.workspace.get_default_datastore()
