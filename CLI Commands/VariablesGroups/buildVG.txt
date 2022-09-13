@@ -1,8 +1,8 @@
 ml.computeIdleSecs = 300
-ml.computeMaxNodes = 1
+ml.computeMaxNodes = 2
 ml.computeMinNodes = 0
-ml.computeName = simple-mlops-demo-for-iris
+ml.computeName = beanleaf-classifier-cluster
 ml.computeVMSize = STANDARD_D4A_V4
 ml.region = centralus
 ml.resourceGroup = RG_Jaganlal
-ml.workspace = simple_mlops_demo_workspace
+ml.workspace = beanleaf_classifier

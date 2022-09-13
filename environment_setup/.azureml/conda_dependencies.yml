@@ -21,8 +21,9 @@ dependencies:
       - pyemd
       - ipywebrtc
       - pre-commit
-      - scipy
-      - scikit-learn
+      - tensorflow
+      - tensorflow_hub
+      - matplotlib
       - requests
       - requests-oauthlib
       - regex

@@ -1,2 +1,2 @@
 # beanleaf-disease-classifier
-Simple MLOps demo for classifying bean leaf diseases
+MLOps demo for classifying bean leaf diseases
