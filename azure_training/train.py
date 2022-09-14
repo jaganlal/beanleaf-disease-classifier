@@ -74,19 +74,19 @@ class BeanleafDiseaseClassifier():
         plt.ylabel('accuracy')
         plt.xlabel('epoch')
         plt.legend(['train_acc', 'val_acc'], loc='best')
+        plt.savefig('./outputs/acc_over_epochs.png')
         self.run.log_image(name='acc_over_epochs.png', plot=plt)
-        plt.show()
 
-        # joblib.dump(model, self.args.model_path)
         model.save(self.args.model_path, save_format='tf')
 
         test_loss, test_acc = model.evaluate(test_ds)
         self.run.log(name='Test Accuracy', value=test_acc)
         self.run.log(name='Test Loss', value=test_loss)
 
-        self.run.tag('BeanleafDiseaseClassifierFinalRun')
+        print('Test Accuracy:', test_acc)
+        print('Test Loss:', test_loss)
 
-        match = re.search('([^\/]*)$', self.args.model_path)
+        self.run.tag('BeanleafDiseaseClassifierNotebookFinalRun')
 
         # Upload Model to Run artifacts
         self.run.upload_folder(name=self.args.artifact_loc,

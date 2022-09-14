@@ -1,4 +1,4 @@
-name: iris_demo
+name: beanleaf_disease_classifier_deps
 channels:
   - defaults
   - conda-forge

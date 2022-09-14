@@ -1,4 +1,4 @@
-name: iris_scoring
+name: beanleaf_disease_classifier_scoring
 channels:
   - defaults
   - conda-forge
@@ -13,7 +13,6 @@ dependencies:
   - pip:
       - azureml-sdk
       - azureml-defaults
-      #- azureml-sdk==1.17.0
       - azureml-monitoring
       - black
       - cached-property
@@ -24,7 +23,9 @@ dependencies:
       - pyemd
       - ipywebrtc
       - pre-commit
-      - scikit-learn
+      - tensorflow
+      - tensorflow_hub
+      - matplotlib
       - requests
       - requests-oauthlib
       - regex
