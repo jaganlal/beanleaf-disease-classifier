@@ -35,6 +35,7 @@ def create_response(predicted_lbl):
 
 def run(raw_data):
     try:
+        print('Request data:', raw_data)
         logger.info('Request data:', raw_data)
         data = json.loads(raw_data)
         content = requests.get(data['path']).content

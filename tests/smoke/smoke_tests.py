@@ -8,7 +8,7 @@ classes = ['angular_leaf_spot','bean_rust','healthy']
 def test_ml_service(scoreurl):
     assert scoreurl != None
     headers = {'Content-Type':'application/json'}
-    resp = requests.post(scoreurl, json=json.dumps(req_sample), headers=headers)
+    resp = requests.post(scoreurl, json=json.loads(json.dumps(req_sample)), headers=headers)
     assert resp.status_code == requests.codes['ok']
     assert resp.text != None
     assert resp.headers.get('content-type') == 'application/json'
@@ -17,7 +17,7 @@ def test_ml_service(scoreurl):
 def test_prediction(scoreurl):
     assert scoreurl != None
     headers = {'Content-Type':'application/json'}
-    resp = requests.post(scoreurl, json=json.dumps(req_sample), headers=headers)
+    resp = requests.post(scoreurl, json=json.loads(json.dumps(req_sample)), headers=headers)
     resp_json = json.loads(resp.text)
     assert resp_json['output']['predicted_class'] == 'healthy'
     logging.info(resp)
