@@ -57,11 +57,6 @@ class BeanleafDiseaseClassifier():
 
             print('Mount Point:', mount_context.mount_point)
 
-            path_to_file1 = os.path.join(mount_context.mount_point, 'healthy/healthy_train.0.jpg')
-            print("Path to file 1:", path_to_file1)
-            file_exists1 = exists(path_to_file1)
-            print("File healthy_train.0.jpg 1 - ", file_exists1)
-
             # DATA needs to be ready here
             beanleaf_dataset_train_path = os.path.join(mount_context.mount_point, 'train')
             beanleaf_dataset_test_path = os.path.join(mount_context.mount_point, 'test')
@@ -125,7 +120,7 @@ class BeanleafDiseaseClassifier():
 
             # Upload Model to Run artifacts
             self.run.upload_folder(name=self.args.artifact_loc,
-                                    path_or_stream=self.args.model_path)
+                                    path=self.args.model_path)
 
             print('Run Files: ', self.run.get_file_names())
             self.run.complete()
