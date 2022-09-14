@@ -37,8 +37,8 @@ def run(raw_data):
     try:
         logger.info('Request data:', raw_data)
         data = json.loads(raw_data)
-        content = requests.get(data.path).content
-        label =np.argmax(model.predict(decode_img(content)), axis=1)
+        content = requests.get(data['path']).content
+        label = np.argmax(model.predict(decode_img(content)), axis=1)
         response = create_response(label)
         logger.info('Response:', response)
         return response
