@@ -35,13 +35,16 @@ def create_response(predicted_lbl):
 
 def run(raw_data):
     try:
+        logger1 = logging.getLogger(__name__)
+        logger1.setLevel(logging.DEBUG)
+
         print('Request data:', raw_data)
-        logger.info('Request data:', raw_data)
+        logger1.info('Request data:', raw_data)
         data = json.loads(raw_data)
         content = requests.get(data['path']).content
         label = np.argmax(model.predict(decode_img(content)), axis=1)
         response = create_response(label)
-        logger.info('Response:', response)
+        logger1.info('Response:', response)
         return response
 
     except Exception as err:
