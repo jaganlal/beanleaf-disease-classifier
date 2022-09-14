@@ -29,9 +29,8 @@ class BeanleafDiseaseClassifier():
         img_width = 224
 
         self.datastore = Datastore.get(self.workspace, self.workspace.get_default_datastore().name)
-        datastore_paths = [(self.datastore, os.path.join(self.args.container_name, 'train/'))]
-        # data_ds = Dataset.Tabular.from_delimited_files(path=datastore_paths)
-        train_data_ds = Dataset.File.from_files(path=datastore_paths)
+        datastore_paths = [(self.datastore, self.args.container_name)]
+        data_ds = Dataset.File.from_files(path=datastore_paths)
 
         # mounted_path = "/tmp"
         # mount_context = train_data_ds.mount(mounted_path)
@@ -52,7 +51,7 @@ class BeanleafDiseaseClassifier():
         # file_exists = exists(path_to_file)
         # print("File healthy_train.0.jpg - ", file_exists)
 
-        with train_data_ds.mount() as mount_context:
+        with data_ds.mount() as mount_context:
             # list top level mounted files and folders in the dataset
             os.listdir(mount_context.mount_point)
 
@@ -63,78 +62,73 @@ class BeanleafDiseaseClassifier():
             file_exists1 = exists(path_to_file1)
             print("File healthy_train.0.jpg 1 - ", file_exists1)
 
-            path_to_file2 = os.path.join(mount_context.mount_point, '/healthy/healthy_train.0.jpg')
-            print("Path to file 2:", path_to_file2)
-            file_exists2 = exists(path_to_file2)
-            print("File healthy_train.0.jpg 2 - ", file_exists2)
+            # DATA needs to be ready here
+            beanleaf_dataset_train_path = os.path.join(mount_context.mount_point, 'train')
+            beanleaf_dataset_test_path = os.path.join(mount_context.mount_point, 'test')
+            beanleaf_dataset_validation_path = os.path.join(mount_context.mount_point, 'validation')
 
-        # DATA needs to be ready here
-        beanleaf_dataset_train_path = os.path.join(self.args.container_name, 'train')
-        beanleaf_dataset_test_path = os.path.join(self.args.container_name, 'test')
-        beanleaf_dataset_validation_path = os.path.join(self.args.container_name, 'validation')
+            train_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_train_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
+            test_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_test_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
+            val_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_validation_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
 
-        train_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_train_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
-        test_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_test_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
-        val_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_validation_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
+            for image_batch, labels_batch in train_ds:
+                print(image_batch.shape)
+                print(labels_batch.shape)
+                break
 
-        for image_batch, labels_batch in train_ds:
-            print(image_batch.shape)
-            print(labels_batch.shape)
-            break
+            classes = train_ds.class_names
+            print(classes)
 
-        classes = train_ds.class_names
-        print(classes)
+            AUTOTUNE = tf.data.AUTOTUNE
+            train_ds = train_ds.cache().prefetch(buffer_size = AUTOTUNE)
+            val_ds = val_ds.cache().prefetch(buffer_size = AUTOTUNE)
 
-        AUTOTUNE = tf.data.AUTOTUNE
-        train_ds = train_ds.cache().prefetch(buffer_size = AUTOTUNE)
-        val_ds = val_ds.cache().prefetch(buffer_size = AUTOTUNE)
+            feature_extractor = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
+            feature_extractor_layer = hub.KerasLayer(feature_extractor, input_shape = (img_height,img_width, 3))
+            feature_extractor_layer.trainable = False
 
-        feature_extractor = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
-        feature_extractor_layer = hub.KerasLayer(feature_extractor, input_shape = (img_height,img_width, 3))
-        feature_extractor_layer.trainable = False
+            normalization_layer = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)
+            tf.random.set_seed(111)
 
-        normalization_layer = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)
-        tf.random.set_seed(111)
+            model = tf.keras.Sequential([
+                            normalization_layer,
+                            feature_extractor_layer,
+                            tf.keras.layers.Dropout(0.3),
+                            tf.keras.layers.Dense(3,activation='softmax')
+            ])
 
-        model = tf.keras.Sequential([
-                        normalization_layer,
-                        feature_extractor_layer,
-                        tf.keras.layers.Dropout(0.3),
-                        tf.keras.layers.Dense(3,activation='softmax')
-        ])
+            model.compile(
+                            optimizer='adam',
+                            loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
+                            metrics=['accuracy']
+            )
 
-        model.compile(
-                        optimizer='adam',
-                        loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
-                        metrics=['accuracy']
-        )
+            history = model.fit(train_ds, epochs = 1, validation_data = val_ds)
+            plt.plot(history.history['accuracy'])
+            plt.plot(history.history['val_accuracy'])
+            plt.ylabel('accuracy')
+            plt.xlabel('epoch')
+            plt.legend(['train_acc', 'val_acc'], loc='best')
+            self.run.log_image(name='acc_over_epochs.png', plot=plt)
+            plt.show()
 
-        history = model.fit(train_ds, epochs = 1, validation_data = val_ds)
-        plt.plot(history.history['accuracy'])
-        plt.plot(history.history['val_accuracy'])
-        plt.ylabel('accuracy')
-        plt.xlabel('epoch')
-        plt.legend(['train_acc', 'val_acc'], loc='best')
-        self.run.log_image(name='acc_over_epochs.png', plot=plt)
-        plt.show()
+            # joblib.dump(model, self.args.model_path)
+            model.save(self.args.model_path, save_format='tf')
 
-        # joblib.dump(model, self.args.model_path)
-        model.save(self.args.model_path, save_format='tf')
+            test_loss, test_acc = model.evaluate(test_ds)
+            self.run.log(name='Test Accuracy', value=test_acc)
+            self.run.log(name='Test Loss', value=test_loss)
 
-        test_loss, test_acc = model.evaluate(test_ds)
-        self.run.log(name='Test Accuracy', value=test_acc)
-        self.run.log(name='Test Loss', value=test_loss)
+            self.run.tag('BeanleafDiseaseClassifierFinalRun')
 
-        self.run.tag('BeanleafDiseaseClassifierFinalRun')
+            match = re.search('([^\/]*)$', self.args.model_path)
 
-        match = re.search('([^\/]*)$', self.args.model_path)
+            # Upload Model to Run artifacts
+            self.run.upload_folder(name=self.args.artifact_loc,
+                                    path_or_stream=self.args.model_path)
 
-        # Upload Model to Run artifacts
-        self.run.upload_folder(name=self.args.artifact_loc,
-                                path_or_stream=self.args.model_path)
-
-        print('Run Files: ', self.run.get_file_names())
-        self.run.complete()
+            print('Run Files: ', self.run.get_file_names())
+            self.run.complete()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='QA Code Indexing pipeline')
