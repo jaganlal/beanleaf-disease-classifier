@@ -15,14 +15,14 @@ Deploy bean leaf disease classification Model to Azure Container Instances
 Set Working Directory 
 $(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/deployment
 
-az ml model deploy -g $(ml.resourceGroup) -w $(ml.workspace) -n mlops-deploy-service -f ../metadata/model.json --dc aciDeploymentConfig.yml --ic inferenceConfig.yml --description "Bean leaf disease classifier deployed in ACI" --overwrite
+az ml model deploy -g $(ml.resourceGroup) -w $(ml.workspace) -n beanleaf-classifier-deploy-service -f ../metadata/model.json --dc aciDeploymentConfig.yml --ic inferenceConfig.yml --description "Bean leaf disease classifier deployed in ACI" --overwrite
 
 Smoke Test
 ----------
 Set Working Directory 
 $(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a
 
-pytest tests/smoke/smoke_tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=integration_test --cov-report=xml --cov-report=html --scoreurl $(az ml service show -g $(ml.resourceGroup) -w $(ml.workspace) -n mlops-deploy-service --query scoringUri -o tsv)
+pytest tests/smoke/smoke_tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=integration_test --cov-report=xml --cov-report=html --scoreurl $(az ml service show -g $(ml.resourceGroup) -w $(ml.workspace) -n beanleaf-classifier-deploy-service --query scoringUri -o tsv)
 
 Publish Test Results
 --------------------
@@ -36,7 +36,12 @@ AKS
 Create AKS cluster
 ------------------
 az ml computetarget create aks -g $(ml.resourceGroup) -w $(ml.workspace) -n $(ml.aksClusterName) -l $(ml.region) -s $(ml.aksComputeVMSize) --verbose -a 1 --cluster-purpose DevTest
+az ml computetarget create aks -g $(ml.resourceGroup) -w $(ml.workspace) -n beanleaf-classifier-cluster -l $(ml.region) -s $(ml.aksComputeVMSize) --verbose -a 1 --cluster-purpose DevTest
 
 Deploy model to AKS for Production
 -----------------------------------
-az ml model deploy --name mlops-aks-service -g $(ml.resourceGroup) -w $(ml.workspace) --ct $(ml.aksClusterName) -f ../metadata/model.json --ic inferenceConfig.yml --dc aksDeploymentConfig.yml --overwrite
+# Deploy the registered model to AKS (Learn more: https://aka.ms/aml-template).
+# Recommendation from Microsoft
+# az ml model deploy -n $(serviceName) --overwrite -m $(amlModelName):$(amlModelVersion) --ic $(inferenceConfigFile) --dc $(deploymentConfigFile) --ct $(aksComputeName) -w $(workspaceName) -g $(resourceGroupName)
+
+az ml model deploy --name beanleaf-classifier-deploy-service -g $(ml.resourceGroup) -w $(ml.workspace) --ct $(ml.aksClusterName) -f ../metadata/model.json --ic inferenceConfig.yml --dc aksDeploymentConfig.yml --overwrite

@@ -1,6 +1,5 @@
 ml.aksComputeVMSize = STANDARD_D4A_V4
 ml.aksClusterName = beanleaf-classifier-cluster
-ml.computeName = beanleaf-classifier-cluster
 ml.region = centralus
 ml.resourceGroup = RG_Jaganlal
 ml.workspace = beanleaf_classifier
