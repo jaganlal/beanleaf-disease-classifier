@@ -23,107 +23,94 @@ class BeanleafDiseaseClassifier():
         self.run = Run.get_context()
         self.workspace = self.run.experiment.workspace
 
+    def get_mount_point(self):
+        self.datastore = Datastore.get(self.workspace, self.workspace.get_default_datastore().name)
+        datastore_paths = [(self.datastore, self.args.container_name)]
+        beanleaf_ds = Dataset.File.from_files(path=datastore_paths)
+
+        mount_point = None
+
+        with beanleaf_ds.mount() as mount_context:
+            mount_point = mount_context.mount_point
+        
+        return mount_point
+
     def create_pipeline(self):
+        mount_point = self.get_mount_point()
+
+        if mount_point is None:
+            print('Mount failed...')
+            return
+
         batch_size = 128
         img_height = 224
         img_width = 224
 
-        self.datastore = Datastore.get(self.workspace, self.workspace.get_default_datastore().name)
-        datastore_paths = [(self.datastore, self.args.container_name)]
-        data_ds = Dataset.File.from_files(path=datastore_paths)
+        beanleaf_dataset_train_path = os.path.join(mount_point, 'train')
+        beanleaf_dataset_test_path = os.path.join(mount_point, 'test')
+        beanleaf_dataset_validation_path = os.path.join(mount_point, 'validation')
 
-        # mounted_path = "/tmp"
-        # mount_context = train_data_ds.mount(mounted_path)
-        # mount_context.start()
-        # print(os.listdir(mounted_path))
+        train_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_train_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
+        test_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_test_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
+        val_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_validation_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
 
-        print('Input dataset:', self.run.input_datasets)
+        for image_batch, labels_batch in train_ds:
+            print(image_batch.shape)
+            print(labels_batch.shape)
+            break
 
-        datastore = self.workspace.get_default_datastore()
-        dataset = Dataset.File.from_files(datastore.path('beanleaf_dataset')).as_named_input('input')
-        print('Dataset:', dataset)
-        print('Path on compute:', dataset.path_on_compute)
+        classes = train_ds.class_names
+        print(classes)
 
-        # path_to_file = os.path.join(self.args.container_name, 'train/healthy/healthy_train.0.jpg')
-        # image_path = [(datastore, os.path.join(self.args.container_name, 'train/healthy/healthy_train.0.jpg'))]
-        # image_ds = Dataset.File.from_files(path=image_path)
-        # print("Path to file:", path_to_file)
-        # file_exists = exists(path_to_file)
-        # print("File healthy_train.0.jpg - ", file_exists)
+        AUTOTUNE = tf.data.AUTOTUNE
+        train_ds = train_ds.cache().prefetch(buffer_size = AUTOTUNE)
+        val_ds = val_ds.cache().prefetch(buffer_size = AUTOTUNE)
 
-        with data_ds.mount() as mount_context:
-            # list top level mounted files and folders in the dataset
-            os.listdir(mount_context.mount_point)
+        feature_extractor = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
+        feature_extractor_layer = hub.KerasLayer(feature_extractor, input_shape = (img_height,img_width, 3))
+        feature_extractor_layer.trainable = False
 
-            print('Mount Point:', mount_context.mount_point)
+        normalization_layer = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)
+        tf.random.set_seed(111)
 
-            # DATA needs to be ready here
-            beanleaf_dataset_train_path = os.path.join(mount_context.mount_point, 'train')
-            beanleaf_dataset_test_path = os.path.join(mount_context.mount_point, 'test')
-            beanleaf_dataset_validation_path = os.path.join(mount_context.mount_point, 'validation')
+        model = tf.keras.Sequential([
+                        normalization_layer,
+                        feature_extractor_layer,
+                        tf.keras.layers.Dropout(0.3),
+                        tf.keras.layers.Dense(3,activation='softmax')
+        ])
 
-            train_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_train_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
-            test_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_test_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
-            val_ds = tf.keras.preprocessing.image_dataset_from_directory(beanleaf_dataset_validation_path, seed=111, image_size=(img_height, img_width), batch_size=batch_size)
+        model.compile(
+                        optimizer='adam',
+                        loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
+                        metrics=['accuracy']
+        )
 
-            for image_batch, labels_batch in train_ds:
-                print(image_batch.shape)
-                print(labels_batch.shape)
-                break
+        history = model.fit(train_ds, epochs = 1, validation_data = val_ds)
+        plt.plot(history.history['accuracy'])
+        plt.plot(history.history['val_accuracy'])
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train_acc', 'val_acc'], loc='best')
+        plt.savefig('./outputs/acc_over_epochs.png')
+        self.run.log_image(name='acc_over_epochs.png', plot=plt)
 
-            classes = train_ds.class_names
-            print(classes)
+        model.save(self.args.model_path, save_format='tf')
 
-            AUTOTUNE = tf.data.AUTOTUNE
-            train_ds = train_ds.cache().prefetch(buffer_size = AUTOTUNE)
-            val_ds = val_ds.cache().prefetch(buffer_size = AUTOTUNE)
+        test_loss, test_acc = model.evaluate(test_ds)
+        self.run.log(name='Test Accuracy', value=test_acc)
+        self.run.log(name='Test Loss', value=test_loss)
 
-            feature_extractor = "https://tfhub.dev/google/tf2-preview/mobilenet_v2/feature_vector/4"
-            feature_extractor_layer = hub.KerasLayer(feature_extractor, input_shape = (img_height,img_width, 3))
-            feature_extractor_layer.trainable = False
+        self.run.tag('BeanleafDiseaseClassifierFinalRun')
 
-            normalization_layer = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)
-            tf.random.set_seed(111)
+        match = re.search('([^\/]*)$', self.args.model_path)
 
-            model = tf.keras.Sequential([
-                            normalization_layer,
-                            feature_extractor_layer,
-                            tf.keras.layers.Dropout(0.3),
-                            tf.keras.layers.Dense(3,activation='softmax')
-            ])
+        # Upload Model to Run artifacts
+        self.run.upload_folder(name=self.args.artifact_loc,
+                                path=self.args.model_path)
 
-            model.compile(
-                            optimizer='adam',
-                            loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
-                            metrics=['accuracy']
-            )
-
-            history = model.fit(train_ds, epochs = 1, validation_data = val_ds)
-            plt.plot(history.history['accuracy'])
-            plt.plot(history.history['val_accuracy'])
-            plt.ylabel('accuracy')
-            plt.xlabel('epoch')
-            plt.legend(['train_acc', 'val_acc'], loc='best')
-            self.run.log_image(name='acc_over_epochs.png', plot=plt)
-            plt.show()
-
-            # joblib.dump(model, self.args.model_path)
-            model.save(self.args.model_path, save_format='tf')
-
-            test_loss, test_acc = model.evaluate(test_ds)
-            self.run.log(name='Test Accuracy', value=test_acc)
-            self.run.log(name='Test Loss', value=test_loss)
-
-            self.run.tag('BeanleafDiseaseClassifierFinalRun')
-
-            match = re.search('([^\/]*)$', self.args.model_path)
-
-            # Upload Model to Run artifacts
-            self.run.upload_folder(name=self.args.artifact_loc,
-                                    path=self.args.model_path)
-
-            print('Run Files: ', self.run.get_file_names())
-            self.run.complete()
+        print('Run Files: ', self.run.get_file_names())
+        self.run.complete()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='QA Code Indexing pipeline')
