@@ -29,7 +29,7 @@ class BeanleafDiseaseClassifier():
         img_width = 224
 
         self.datastore = Datastore.get(self.workspace, self.workspace.get_default_datastore().name)
-        datastore_paths = [(self.datastore, os.path.join(self.args.container_name, 'train'))]
+        datastore_paths = [(self.datastore, os.path.join(self.args.container_name, 'train/'))]
         # data_ds = Dataset.Tabular.from_delimited_files(path=datastore_paths)
         train_data_ds = Dataset.File.from_files(path=datastore_paths)
 
@@ -45,10 +45,12 @@ class BeanleafDiseaseClassifier():
         print('Dataset:', dataset)
         print('Path on compute:', dataset.path_on_compute)
 
-        path_to_file = os.path.join(self.args.container_name, 'train/healthy/healthy_train.0.jpg')
-        print("Path to file:", path_to_file)
-        file_exists = exists(path_to_file)
-        print("File healthy_train.0.jpg - ", file_exists)
+        # path_to_file = os.path.join(self.args.container_name, 'train/healthy/healthy_train.0.jpg')
+        # image_path = [(datastore, os.path.join(self.args.container_name, 'train/healthy/healthy_train.0.jpg'))]
+        # image_ds = Dataset.File.from_files(path=image_path)
+        # print("Path to file:", path_to_file)
+        # file_exists = exists(path_to_file)
+        # print("File healthy_train.0.jpg - ", file_exists)
 
         with train_data_ds.mount() as mount_context:
             # list top level mounted files and folders in the dataset
@@ -56,12 +58,12 @@ class BeanleafDiseaseClassifier():
 
             print('Mount Point:', mount_context.mount_point)
 
-            path_to_file1 = os.path.join(mount_context.mount_point, 'train/healthy/healthy_train.0.jpg')
+            path_to_file1 = os.path.join(mount_context.mount_point, 'healthy/healthy_train.0.jpg')
             print("Path to file 1:", path_to_file1)
             file_exists1 = exists(path_to_file1)
             print("File healthy_train.0.jpg 1 - ", file_exists1)
 
-            path_to_file2 = os.path.join(mount_context.mount_point, 'beanleaf_dataset/train/healthy/healthy_train.0.jpg')
+            path_to_file2 = os.path.join(mount_context.mount_point, '/healthy/healthy_train.0.jpg')
             print("Path to file 2:", path_to_file2)
             file_exists2 = exists(path_to_file2)
             print("File healthy_train.0.jpg 2 - ", file_exists2)
