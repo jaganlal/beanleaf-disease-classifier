@@ -5,7 +5,7 @@ autoPrepareEnvironment: true
 maxRunDurationSeconds:
 nodeCount: 1
 environment:
-  name: iris_demo
+  name: beanleaf_disease_classifier_env
   python:
     userManagedDependencies: false
     interpreterPath: python
@@ -26,7 +26,7 @@ history:
 dataReferences:
   workspaceblobstore:
     dataStoreName: workspaceblobstore
-    pathOnDataStore: irisdata
+    pathOnDataStore: beanleaf_dataset
     mode: download
     overwrite: true
     pathOnCompute: 
