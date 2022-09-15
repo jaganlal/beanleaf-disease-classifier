@@ -11,11 +11,10 @@ classes = ['angular_leaf_spot','bean_rust','healthy']
 def test_ml_service(scoreurl):
     assert scoreurl != None
     headers = {'Content-Type':'application/json'}
-    prediction_request = json.loads(json.dumps(req_sample))
-    logger.info('Test ml service request:', json.dumps(req_sample))
-    resp = requests.post(scoreurl, json=prediction_request, headers=headers)
-    logger.info('ML service response:', resp.status_code)
-    logger.debug('ML service response - DEBUG:', resp.status_code)
+    # prediction_request = json.loads(json.dumps(req_sample))
+    logger.info('Test ml service request:')
+    resp = requests.post(scoreurl, json=req_sample, headers=headers)
+    logger.info('ML service response:')
     assert resp.status_code == requests.codes['ok']
     assert resp.text != None
     assert resp.headers.get('content-type') == 'application/json'
@@ -24,9 +23,9 @@ def test_ml_service(scoreurl):
 def test_prediction(scoreurl):
     assert scoreurl != None
     headers = {'Content-Type':'application/json'}
-    prediction_request = json.loads(json.dumps(req_sample))
-    logger.info('Test prediction request:', json.dumps(req_sample))
-    resp = requests.post(scoreurl, json=prediction_request, headers=headers)
-    logger.info('Test prediction response:', resp.text)
+    # prediction_request = json.loads(json.dumps(req_sample))
+    logger.info('Test prediction request:')
+    resp = requests.post(scoreurl, json=req_sample, headers=headers)
+    logger.info('Test prediction response:')
     resp_json = json.loads(resp.text)
     assert resp_json['output']['predicted_class'] == 'angular_leaf_spot'
