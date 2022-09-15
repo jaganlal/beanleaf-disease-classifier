@@ -13,7 +13,7 @@ az extension add -n azure-cli-ml
 Deploy bean leaf disease classification Model to Azure Container Instances
 ----------------------------------------------
 Set Working Directory 
-$(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/deployment
+$(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/5_deployment
 
 az ml model deploy -g $(ml.resourceGroup) -w $(ml.workspace) -n cv-clsifier-deploy-service -f ../metadata/model.json --dc aciDeploymentConfig.yml --ic inferenceConfig.yml --description "Bean leaf disease classifier deployed in ACI" --overwrite
 

@@ -23,25 +23,7 @@ class BeanleafDiseaseClassifier():
         self.run = Run.get_context()
         self.workspace = self.run.experiment.workspace
 
-    def get_mount_point(self):
-        self.datastore = Datastore.get(self.workspace, self.workspace.get_default_datastore().name)
-        datastore_paths = [(self.datastore, self.args.container_name)]
-        beanleaf_ds = Dataset.File.from_files(path=datastore_paths)
-
-        mount_point = None
-
-        with beanleaf_ds.mount() as mount_context:
-            mount_point = mount_context.mount_point
-        
-        return mount_point
-
     def create_pipeline(self):
-        # mount_point = self.get_mount_point()
-
-        # if mount_point is None:
-        #     print('Mount failed...')
-        #     return
-
         batch_size = 128
         img_height = 224
         img_width = 224
