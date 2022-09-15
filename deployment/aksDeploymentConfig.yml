@@ -7,7 +7,7 @@ autoScaler:
     targetUtilization: 80
 dataCollection:
     storageEnabled: True
-authEnabled: True
+authEnabled: False
 appInsightsEnabled : True
 containerResourceRequirements:
     cpu: 1
