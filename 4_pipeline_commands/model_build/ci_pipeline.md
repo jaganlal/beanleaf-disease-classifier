@@ -85,9 +85,9 @@ az ml run submit-script
             --experiment-name $(ml.experimentName)
             --ct $(ml.computeName)
             --run-configuration-name train
-            --source-directory ./5_model_training_from_azure_pipeline
-            train.py
-            --path ./5_model_training_from_azure_pipeline/environment_setup 
+            --source-directory .
+            5_model_training_from_azure_pipeline/train.py
+            --path 5_model_training_from_azure_pipeline/environment_setup 
             --output-metadata-file ./metadata/run.json
             --container_name beanleaf_dataset
             --model_path ./models/
