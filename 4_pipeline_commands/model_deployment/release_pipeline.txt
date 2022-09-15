@@ -20,7 +20,7 @@ az ml model deploy -g $(ml.resourceGroup) -w $(ml.workspace) -n cv-clsifier-depl
 Smoke Test
 ----------
 Set Working Directory 
-$(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a
+$(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/6_deployment
 
 pytest tests/smoke/smoke_tests.py --log-cli-level=info --doctest-modules --junitxml=junit/test-results.xml --cov=integration_test --cov-report=xml --cov-report=html --scoreurl $(az ml service show -g $(ml.resourceGroup) -w $(ml.workspace) -n cv-clsifier-deploy-service --query scoringUri -o tsv)
 
