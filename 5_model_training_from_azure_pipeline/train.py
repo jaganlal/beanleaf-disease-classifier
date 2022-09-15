@@ -1,6 +1,4 @@
 import os
-from os.path import exists
-
 from azureml.core import Datastore, Dataset
 from azureml.core.run import Run
 import argparse
@@ -10,12 +8,8 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import tensorflow_hub as hub
 
-import numpy as np
-
 import warnings
 warnings.filterwarnings('ignore')
-
-import re
 
 class BeanleafDiseaseClassifier():
     def __init__(self, args):

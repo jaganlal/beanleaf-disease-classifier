@@ -28,7 +28,7 @@ mkdir metadata && mkdir models
 
 Model Training
 -------------
-az ml run submit-script --resource-group $(ml.resourceGroup) --workspace-name $(ml.workspace) --experiment-name $(ml.experimentName) --ct $(ml.computeName) --source-directory ./5_model_training_from_azure_pipeline train.py --path ./5_model_training_from_azure_pipeline/environment_setup --run-configuration-name train --output-metadata-file ./metadata/run.json --container_name beanleaf_dataset --model_path ./models/ --artifact_loc ./outputs/models/ --dataset_name beanleaf --dataset_desc "MLOps demo for classifying bean leaf diseases"
+az ml run submit-script --resource-group $(ml.resourceGroup) --workspace-name $(ml.workspace) --experiment-name $(ml.experimentName) --ct $(ml.computeName) --source-directory . ./5_model_training_from_azure_pipeline/train.py --path ./5_model_training_from_azure_pipeline/environment_setup --run-configuration-name train --output-metadata-file ./metadata/run.json --container_name beanleaf_dataset --model_path ./models/ --artifact_loc ./outputs/models/ --dataset_name beanleaf --dataset_desc "MLOps demo for classifying bean leaf diseases"
 
 Register Model in to Model Registry
 ------------------------------------
