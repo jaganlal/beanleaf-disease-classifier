@@ -1,11 +1,11 @@
 import requests
 
-# {"SepalLengthCm": 6.6, "SepalWidthCm": 3, "PetalLengthCm": 4.4, "PetalWidthCm": 1.4}
+# {"path": "https://beanipm.pbgworks.org/sites/pbg-beanipm7/files/styles/picture_custom_user_wide_1x/public/AngularLeafSpotFig1a.jpg"}
 
-url = "http://7e85f703-478b-4890-8ea3-a21ab2e6c157.centralus.azurecontainer.io/score"
+url = "http://20.221.115.5:80/api/v1/service/cv-clsifier-deploy-service/score"
 
 
-payload="{\"SepalLengthCm\": 6.6, \"SepalWidthCm\": 3, \"PetalLengthCm\": 4.4, \"PetalWidthCm\": 1.4}"
+payload="{\"path\": \"https://beanipm.pbgworks.org/sites/pbg-beanipm7/files/styles/picture_custom_user_wide_1x/public/AngularLeafSpotFig1a.jpg\"}"
 headers = {
   'Content-Type': 'application/json'
 }
