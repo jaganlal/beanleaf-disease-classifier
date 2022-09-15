@@ -1,5 +1,5 @@
 framework: Python
-script: train.py
+script: 5_model_training_from_azure_pipeline/train.py
 communicator: None
 autoPrepareEnvironment: true
 maxRunDurationSeconds:
