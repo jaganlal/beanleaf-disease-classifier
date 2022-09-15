@@ -18,4 +18,4 @@ def test_prediction(scoreurl):
     headers = {'Content-Type':'application/json'}
     resp = requests.post(scoreurl, json=req_sample, headers=headers)
     resp_json = json.loads(resp.text)
-    assert resp_json['output']['predicted_class'] == 'bean_rust'
+    assert resp_json['output']['predicted_class'] == 'angular_leaf_spot'
