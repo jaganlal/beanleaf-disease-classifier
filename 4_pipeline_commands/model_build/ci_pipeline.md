@@ -1,3 +1,8 @@
+## Only for documentation purpose
+To use the scripts/commands, refer `ci_pipeline.txt` from the same folder
+
+<br/>
+
 ## Use Python
 Display name `Use Python 3.8`
 
@@ -74,15 +79,15 @@ mkdir metadata && mkdir models
 
 **Inline Script**
 ```
-az ml run submit-script
-            --source-directory ./5_model_training_from_azure_pipeline
-            train.py
-            --path ./5_model_training_from_azure_pipeline/environment_setup
-            --run-configuration-name train
+az ml run submit-script 
             --resource-group $(ml.resourceGroup)
-            --workspace-name  $(ml.workspace)
+            --workspace-name $(ml.workspace)
             --experiment-name $(ml.experimentName)
             --ct $(ml.computeName)
+            --run-configuration-name train
+            --source-directory ./5_model_training_from_azure_pipeline
+            train.py
+            --path ./5_model_training_from_azure_pipeline/environment_setup 
             --output-metadata-file ./metadata/run.json
             --container_name beanleaf_dataset
             --model_path ./models/

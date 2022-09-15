@@ -1,3 +1,8 @@
+## Only for documentation purpose
+To use the scripts/commands, refer `release_pipeline.txt` from the same folder
+
+<br/>
+
 ## Use Python 3.x
 Display name `Use Python 3.x`
 
