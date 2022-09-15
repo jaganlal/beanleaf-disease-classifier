@@ -24,7 +24,7 @@ az extension add -n azure-cli-ml
 ## Create AKS cluster
 > **Task type**: Azure CLI
 
-> **Set Working Directory**: $(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/deployment
+> **Set Working Directory**: $(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/5_deployment
 
 **Inline Script**:
 ```
@@ -43,7 +43,7 @@ az ml computetarget create aks
 
 > **Task type**: Azure CLI
 
-> **Set Working Directory**: $(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/deployment
+> **Set Working Directory**: $(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/5_deployment
 
 ### Azure Kubernetes Service
 **Inline Script**:
