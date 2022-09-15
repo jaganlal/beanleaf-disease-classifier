@@ -75,9 +75,9 @@ mkdir metadata && mkdir models
 **Inline Script**
 ```
 az ml run submit-script
-            --source-directory ./4_model_training_from_azure_pipeline
+            --source-directory ./5_model_training_from_azure_pipeline
             train.py
-            --path environment_setup
+            --path ./5_model_training_from_azure_pipeline/environment_setup
             --run-configuration-name train
             --resource-group $(ml.resourceGroup)
             --workspace-name  $(ml.workspace)
@@ -118,8 +118,8 @@ az ml model register
             Target Folder : $(Build.ArtifactStagingDirectory)
             Contents :
             **/metadata/*
-            **/4_model_training_from_azure_pipeline/environment_setup/environment_setup/*
-            **/5_deployment/*
+            **/5_model_training_from_azure_pipeline/environment_setup/environment_setup/*
+            **/6_deployment/*
             **/inference/*
             **/tests/smoke/*
             **/outputs/*
