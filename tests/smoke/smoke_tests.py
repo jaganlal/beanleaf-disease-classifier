@@ -1,9 +1,5 @@
 import requests
 import json
-import logging
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 req_sample = {'path': 'https://beanipm.pbgworks.org/sites/pbg-beanipm7/files/styles/picture_custom_user_wide_1x/public/AngularLeafSpotFig1a.jpg'}
 classes = ['angular_leaf_spot','bean_rust','healthy']
@@ -11,10 +7,7 @@ classes = ['angular_leaf_spot','bean_rust','healthy']
 def test_ml_service(scoreurl):
     assert scoreurl != None
     headers = {'Content-Type':'application/json'}
-    # prediction_request = json.loads(json.dumps(req_sample))
-    logger.info('Test ml service request:')
     resp = requests.post(scoreurl, json=req_sample, headers=headers)
-    logger.info('ML service response:')
     assert resp.status_code == requests.codes['ok']
     assert resp.text != None
     assert resp.headers.get('content-type') == 'application/json'
@@ -23,9 +16,6 @@ def test_ml_service(scoreurl):
 def test_prediction(scoreurl):
     assert scoreurl != None
     headers = {'Content-Type':'application/json'}
-    # prediction_request = json.loads(json.dumps(req_sample))
-    logger.info('Test prediction request:')
     resp = requests.post(scoreurl, json=req_sample, headers=headers)
-    logger.info('Test prediction response:')
     resp_json = json.loads(resp.text)
-    assert resp_json['output']['predicted_class'] == 'angular_leaf_spot'
+    assert resp_json['output']['predicted_class'] == 'bean_rust'
