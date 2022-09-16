@@ -36,7 +36,6 @@ AKS
 Create AKS cluster
 ------------------
 az ml computetarget create aks -g $(ml.resourceGroup) -w $(ml.workspace) -n $(ml.aksClusterName) -l $(ml.region) -s $(ml.aksComputeVMSize) --verbose -a 1 --cluster-purpose DevTest
-az ml computetarget create aks -g $(ml.resourceGroup) -w $(ml.workspace) -n beanleaf-classifier-cluster -l $(ml.region) -s $(ml.aksComputeVMSize) --verbose -a 1 --cluster-purpose DevTest
 
 Deploy model to AKS for Production
 -----------------------------------
@@ -44,4 +43,4 @@ Deploy model to AKS for Production
 # Recommendation from Microsoft
 # az ml model deploy -n $(serviceName) --overwrite -m $(amlModelName):$(amlModelVersion) --ic $(inferenceConfigFile) --dc $(deploymentConfigFile) --ct $(aksComputeName) -w $(workspaceName) -g $(resourceGroupName)
 
-az ml model deploy --name cv-clsifier-deploy-service -g $(ml.resourceGroup) -w $(ml.workspace) --ct $(ml.aksClusterName) -f ../metadata/model.json --ic inferenceConfig.yml --dc aksDeploymentConfig.yml --overwrite
+az ml model deploy --name cv-clsifier-deploy-service -g $(ml.resourceGroup) -w $(ml.workspace) --ct $(ml.aksClusterName) -f ../metadata/model.json --ic inferenceConfig.yml --dc aksDeploymentConfig.yml --description "Bean leaf disease classifier deployed in ACI" --overwrite

@@ -13,7 +13,7 @@ Display name `Use Python 3.x`
 
 **Script Path**:
 ```
-$(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/environment_setup/install-requirements.sh
+$(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/s/5_model_training_from_azure_pipeline/environment_setup/install-requirements.sh
 ```
 <br/>
 
@@ -53,15 +53,15 @@ az ml computetarget create aks
 ### Azure Kubernetes Service
 **Inline Script**:
 ```
-az ml model deploy
-            -g $(ml.resourceGroup)
-            -w $(ml.workspace)
-            -n cv-clsifier-deploy-service
-            --ct $(ml.aksClusterName)
-            -f ../metadata/model.json
-            --dc aksDeploymentConfig.yml
-            --ic inferenceConfig.yml
-            --description "Bean leaf disease classifier deployed in ACI" --overwrite
+az ml model deploy 
+                --name cv-clsifier-deploy-service
+                -g $(ml.resourceGroup)
+                -w $(ml.workspace)
+                --ct $(ml.aksClusterName)
+                -f ../metadata/model.json
+                --ic inferenceConfig.yml
+                --dc aksDeploymentConfig.yml
+                --description "Bean leaf disease classifier deployed in ACI" --overwrite
 ```
 
 ### Azure Container Instances

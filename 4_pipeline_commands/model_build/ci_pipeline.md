@@ -80,19 +80,18 @@ mkdir metadata && mkdir models
 **Inline Script**
 ```
 az ml run submit-script 
-            --resource-group $(ml.resourceGroup)
-            --workspace-name $(ml.workspace)
-            --experiment-name $(ml.experimentName)
-            --ct $(ml.computeName)
-            --run-configuration-name train
-            --source-directory .
-            5_model_training_from_azure_pipeline/train.py
+            --resource-group $(ml.resourceGroup) 
+            --workspace-name $(ml.workspace) 
+            --experiment-name $(ml.experimentName) 
+            --ct $(ml.computeName) 
+            --run-configuration-name train 
             --path 5_model_training_from_azure_pipeline/environment_setup 
-            --output-metadata-file ./metadata/run.json
-            --container_name beanleaf_dataset
-            --model_path ./models/
-            --artifact_loc ./outputs/models/
-            --dataset_name beanleaf
+            --source-directory ./5_model_training_from_azure_pipeline 
+            --output-metadata-file ./metadata/run.json train.py 
+            --container_name beanleaf_dataset 
+            --model_path ./models/ 
+            --artifact_loc ./outputs/models/ 
+            --dataset_name beanleaf 
             --dataset_desc "MLOps demo for classifying bean leaf diseases"
 ```
 <br/>
@@ -108,7 +107,7 @@ az ml model register
             -n beanleaf_disease_classifier
             --asset-path ./outputs/models/
             -d "Bean leaf diseases classifier"
-            --tag "model"="Tensorflow"
+            --tag "model"="Tensorflow" 
             --model-framework Custom
             -f ./metadata/run.json
             -t ./metadata/model.json
