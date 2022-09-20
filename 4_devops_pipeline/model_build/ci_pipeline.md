@@ -22,7 +22,7 @@ environment_setup/install-requirements.sh
 az extension add -n azure-cli-ml
 ```
 
-## Create/Use ML Workspace
+## Create/Use ML Workspace (Optional - if the workspace is already created)
 > **Task type**: Azure CLI
 
 **Inline Script**:
@@ -34,7 +34,7 @@ az ml workspace create
                 --exist-ok --yes
 ```
 
-## Create/Use Compute Target
+## Create/Use Compute Target (Optional - if the resources are already provisioned)
 > **Task type**: Azure CLI
 
 **Inline Script**:
@@ -49,7 +49,7 @@ az ml computetarget create amlcompute
                     --idle-seconds-before-scaledown $(ml.computeIdleSecs) 
 ```
 
-## Upload Data to Blobstore
+## Upload Data to Blobstore (Optional - if the data is already present/uploaded)
 > **Task type**: Azure CLI
 
 **Inline Script**:

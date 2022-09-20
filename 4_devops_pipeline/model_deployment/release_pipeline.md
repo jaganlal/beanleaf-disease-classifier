@@ -26,7 +26,7 @@ az extension add -n azure-cli-ml
 ```
 <br/>
 
-## Create AKS cluster
+## Create AKS cluster (Optional - if the resources are already provisioned)
 > **Task type**: Azure CLI
 
 > **Set Working Directory**: $(System.DefaultWorkingDirectory)/_beanleaf-disease-classifier-CI/beanleaf_disease_classifier/a/6_deployment
