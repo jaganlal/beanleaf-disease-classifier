@@ -75,7 +75,7 @@ class BeanleafDiseaseClassifier():
                             metrics=['accuracy']
             )
 
-            history = model.fit(train_ds, epochs = 15, validation_data = val_ds)
+            history = model.fit(train_ds, epochs = 16, validation_data = val_ds)
             plt.plot(history.history['accuracy'])
             plt.plot(history.history['val_accuracy'])
             plt.ylabel('accuracy')
