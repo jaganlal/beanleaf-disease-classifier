@@ -1,13 +1,13 @@
 # Bean leaf disease classifier
 MLOps demo for classifying bean leaf diseases
 
-## 1. Local training
+## 1. Model development
 Data scientists/engineers can begin their ML journey from this folder to train, test and evaluate model(s)
-> **Folder name**: 1_local_training
+> **Folder name**: 1_model_development
 
 <br/>
 
-## 2. Cloud Setup
+## 2. Cloud setup
 Code to provision basic resources - workspace, compute, dataset
 > **Folder name**: 2_cloud_setup
 
@@ -21,7 +21,7 @@ Notebook to train, test & evaludate model using azure dataset. This notebook com
 
 ## 4. Scripts to use for CI, CT & CD
 This contains sequence of pipeline tasks (for both model building & deployment) that gets triggered everytime when new code is checked in and approved.
-> **Folder name**: 4_pipeline_commands
+> **Folder name**: 4_devops_pipeline
 
 <br/>
 

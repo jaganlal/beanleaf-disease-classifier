@@ -76,7 +76,7 @@ class BeanleafDiseaseClassifier():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='QA Code Indexing pipeline')
-    parser.add_argument('--container_name', type=str, help='Path to default datastore container', default='beanleaf_dataset')
+    parser.add_argument('--container_name', type=str, help='Path to default datastore container', default='../0_data/beanleaf_dataset')
     parser.add_argument('--dataset_name', type=str, help='Dataset name to store in workspace', default='beanleaf')
     parser.add_argument('--dataset_desc', type=str, help='Dataset description', default='')
     parser.add_argument('--model_path', type=str, help='Path to store the model', default='./local_training/models')
