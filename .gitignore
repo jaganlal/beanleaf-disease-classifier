@@ -1,5 +1,6 @@
 env
 beanleaf_dataset
+embeddings
 models
 .DS_Store
 
