@@ -1,0 +1,48 @@
+Hi,
+
+1. Today I'm going to demonstrate a fully automated end-to-end CI/CD pipeline for a machine learning project combining Azure DevOps & Azure ML Studio.
+2. Before getting into the demo, i would like to show you the high level architecture and walk you through our accelerators that speed up the MLOps process.
+    a. This is the high level architecture for our demo
+    b. As you can see, the accelerators that we bring is shown with IBM logo in it
+    c. Some of the accelerators are in the form of code and others are industry best practices, templates and folder structure inline with each persona's journey -
+    let me open up the code and show how the folders are organized.
+    d. For example 
+        i. Data Engineer will work on 0_data
+        ii. Data Scientist will work in 1_model_development folder
+        iii. DevOps Engineer (IaC) will work in 2_cloud_setup folder
+        iv. MLOps Engineer will work in 4_devops_pipeline folder
+        v. ML Engineer will work in 5_model_training_from_azure_pipeline folder
+        vi. ML Engineer will work in 6_deployment folder
+3. In this session we'll be primarily looking into 1_model_development, 4_devops_pipeline, 5_model_training_from_azure_pipeline & 6_deployment folders
+4. It's an image classificatio demo using bean leaf dataset, which classifies a bean leaf into 3 classes - if a leaf is healthy or have an angular leaf spot
+    or have bean rust disease
+5. As a prerequisite, 
+    a. i have downloaded the bean leaf dataset from Kaggle and uploaded to Azure Datastores
+    b. connected github repo with Azure DevOps to trigger continuous integration
+--pause--
+6. Data Scientist will begin their journey from 1_model_development folder using jupyter notebook for eda, training and evaluating the model.
+7. Once the model training is complete, journey of a ML Engineer begins from 5_model_training_from_azure_pipeline folder, where they can create training code
+    to run inside Azure ML Studio mounting the bean leaf dataset (show train.py code)
+8. Now its time to look into the code accelerators (show VS Code - 4_devops_pipeline --> model_build)
+    a. install the required libs & dependencies,
+    b. train and register the model into Azure ML Studio
+    c. and finally publish the artifact
+--JUMP TO BROWSER AND SHOW THE BUILD PIPELINE, AND FROM ML.AZURE.COM SHOW THE MODEL & JOB--
+9. At this point, the model is registered and ready for deployment & inference
+10. Accelerators for deployment can be found under 4_devops_pipeline --> model_deployment (show VS Code - 4_devops_pipeline --> model_deployment)
+    a. install the required libs & dependencies
+    b. deploy the model to aks by setting proper working directory (from 6_deployment show inferenceConfig.yml, score.py)
+    c. perform smoke test (from 6_deployment show tests/smoke_tests.py)
+    d. (talk about release pipeline and approval process)
+--JUMP TO BROWSER AND SHOW THE RELEASE PIPELINE, AND FROM ML.AZURE.COM SHOW THE ENDPOINT--
+11. Test the endpoint
+https://extension.umn.edu/sites/extension.umn.edu/files/beans-viral-diseases-2.jpg - bean rust
+https://extension.umn.edu/sites/extension.umn.edu/files/common-blight-bean.jpg - angular_leaf_spot
+https://www.healthbenefitstimes.com/9/gallery/green-beans/Leaves-of-Green-beans.jpg - healthy
+https://www.greengardentribe.com/wp-content/uploads/2022/02/shutterstock_1175964415-scaled.jpg - bean_rust
+
+Misc
+----
+How to bring a complete automated pipeline combining Azure DevOps & Azure ML Studio
+Live demo on fully integrated/automated end-to-end CI/CD pipeline for a machine learning project
+MLOps is an end-to-end life cycle management of an ML project

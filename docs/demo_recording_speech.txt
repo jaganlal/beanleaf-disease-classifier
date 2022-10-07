@@ -1,0 +1,63 @@
+Hi,
+
+1. Today I'm going to demonstrate a fully automated end-to-end CI/CD pipeline for a machine learning project combining Azure DevOps & Azure ML Studio.
+
+2. Before getting into the demo, i would like to show you the high level architecture and walk you through our accelerators that speed up the MLOps process.
+    a. This is the high level architecture for our demo (elaborate here)
+    b. As you can see, the accelerators that we bring is shown with IBM logo in it
+    c. Some of the accelerators are in the form of code and others are industry best practices, templates and folder structure inline with each persona's journey -
+    let me open up the code and show how the folders are organized.
+    d. The folders are organized for each persona - 
+        i. Data Engineer
+        ii. Data Scientist
+        iii. MLOps Engineer
+        iv. ML Engineer
+
+3. For this demo, we'll be creating a simple image classification model... 
+    given a leaf image the model will classify whether the leaf is healthy or have any diseases(angular leaf spot or bean rust)
+
+4. As a prerequisite, 
+    a. i have downloaded the bean leaf dataset from Kaggle and uploaded to Azure Datastores
+    b. connected github repo with Azure DevOps to trigger continuous integration
+
+--pause--
+
+5. A Data Scientist will begin their model creation journey using jupyter notebook for eda, training and evaluating the model.
+
+6. Once the model training is complete, ML Engineer can modify the notebook code to train the model in
+    Azure ML Studio mounting the bean leaf dataset
+    --show train.py code--
+    You can use the same template as an accelerator (show environment_setup folder --> train.runconfig & install-requirements.sh)
+    and make changes based on your model and use case
+
+7. Now you can use the pipeline task accelerators (show VS Code - 4_devops_pipeline --> model_build) and run your model in AML Studio
+    Quick glance on the accelerators are
+    a. install the required libs & dependencies,
+    b. train and register the model into Azure ML Studio
+    c. and finally publish the artifact
+
+--JUMP TO BROWSER AND SHOW THE BUILD PIPELINE, AND FROM ML.AZURE.COM SHOW THE MODEL & JOB--
+
+9. At this point, the model is registered and ready for deployment & inference
+
+10. To accelerate the model deployment process, lets use the deployment accelerators 
+    (which can be found under 4_devops_pipeline --> model_deployment (show VS Code - 4_devops_pipeline --> model_deployment))
+    Quick glance on the accelerators are
+    a. install the required libs & dependencies
+    b. deploy the model to aks by setting proper working directory (from 6_deployment show inferenceConfig.yml, score.py)
+    c. perform smoke test (from 6_deployment show tests/smoke_tests.py)
+    d. (talk about release pipeline and approval process)
+    
+--JUMP TO BROWSER AND SHOW THE RELEASE PIPELINE, AND FROM ML.AZURE.COM SHOW THE ENDPOINT--
+
+Approval process
+-----------------
+At enterprise, before a model is deployed into production, it needs to go through few approval processes from various groups compliance, model risk assessment/management.
+Enterprises will have their own checks and balances for model deployment approval process
+
+11. Test the endpoint
+https://extension.umn.edu/sites/extension.umn.edu/files/beans-viral-diseases-2.jpg - bean rust
+https://extension.umn.edu/sites/extension.umn.edu/files/common-blight-bean.jpg - angular_leaf_spot
+https://www.healthbenefitstimes.com/9/gallery/green-beans/Leaves-of-Green-beans.jpg - healthy
+https://www.greengardentribe.com/wp-content/uploads/2022/02/shutterstock_1175964415-scaled.jpg - bean_rust
+
