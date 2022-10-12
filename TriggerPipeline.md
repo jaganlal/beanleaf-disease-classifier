@@ -40,4 +40,4 @@ Get Project IDs: `curl -u :<pat> https://dev.azure.com/{organization}/_apis/proj
     [Generic webhook based triggers for YAML pipelines](https://learn.microsoft.com/en-us/azure/devops/release-notes/2020/pipelines/sprint-172-update?WT.mc_id=DOP-MVP-21138#generic-webhook-based-triggers-for-yaml-pipelines)
     [Trigger a pipeline using a webhook](https://levelup.gitconnected.com/trigger-a-pipeline-using-webhook-586a664addd7)
     [Define resources in YAML](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/resources?view=azure-devops&tabs=schema)
-[Triggering a build from a webhook]
+[Trigger Azure Devops build pipelines using REST API](https://www.youtube.com/watch?v=PdFb35sXuIw)
